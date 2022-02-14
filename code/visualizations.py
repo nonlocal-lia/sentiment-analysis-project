@@ -5,21 +5,22 @@ import statsmodels.api as sm
 import scipy.stats as stats
 import time
 from sklearn.inspection import permutation_importance
+from sklearn.metrics import  confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 from matplotlib.axes._axes import _log as matplotlib_axes_logger
 import matplotlib.ticker as mticker
 import seaborn as sns
-large = 28
-med = 20
-small = 12
-params = {'axes.titlesize': large,
-          'legend.fontsize': med,
-          'figure.figsize': (15, 10),
-          'axes.labelsize': med,
-          'xtick.labelsize': med,
-          'ytick.labelsize': med,
-          'figure.titlesize': large}
-plt.rcParams.update(params)
+# large = 28
+# med = 20
+# small = 18
+# params = {'axes.titlesize': large,
+#          'legend.fontsize': med,
+#          'figure.figsize': (12, 8),
+#          'axes.labelsize': med,
+#          'xtick.labelsize': med,
+#          'ytick.labelsize': med,
+#          'figure.titlesize': large}
+# plt.rcParams.update(params)
 plt.style.use('seaborn-darkgrid')
 
 
@@ -200,3 +201,45 @@ def one_hot_coef_graph(coef_df, categories, dropped_var, target_name='Price', in
     if save_name:
         plt.savefig(f'images/{save_name}.png')
     return plt.show()
+
+def make_network_confusion_matrices(model, X_train, y_train, X_test, y_test, labels, title, batch_size=32):
+
+    # Converting 
+    train_predictions = model.predict(X_train, batch_size=batch_size, verbose=0)
+    rounded_train_predictions = np.argmax(train_predictions, axis=1)
+    rounded_train_labels=np.argmax(y_train, axis=1)
+    test_predictions = model.predict(X_test, batch_size=batch_size, verbose=0)
+    rounded_test_predictions = np.argmax(test_predictions, axis=1)
+    rounded_test_labels=np.argmax(y_test, axis=1)
+
+    train_cm = confusion_matrix(rounded_train_labels, rounded_train_predictions)
+    disp = ConfusionMatrixDisplay(train_cm, display_labels=labels)
+    disp.plot(cmap="Greens")
+    plt.grid(False)
+    plt.title('Training Matrix: {}'.format(title))
+    plt.show()
+
+    test_cm = confusion_matrix(rounded_test_labels, rounded_test_predictions)
+    disp = ConfusionMatrixDisplay(test_cm, display_labels=labels)
+    disp.plot(cmap="Greens")
+    plt.grid(False)
+    plt.title('Test Matrix: {}'.format(title))
+    plt.show()
+
+def training_graph(val_dict, title):
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    loss_values = val_dict['loss']
+    val_loss_values = val_dict['val_loss']
+
+    epochs = range(1, len(loss_values) + 1)
+    ax.plot(epochs, loss_values, label='Training loss')
+    ax.plot(epochs, val_loss_values, label='Validation loss')
+
+    ax.set_title('Training & Validation Loss: {}'.format(title))
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Loss')
+    ax.legend()
+    return plt.show()
+
+    
