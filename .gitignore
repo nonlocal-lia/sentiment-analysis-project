@@ -4,3 +4,4 @@
 *.pyc
 *__pycache__
 glove.twitter.27B.50d.txt
+glove.twitter.27B.100d.txt
