@@ -203,7 +203,7 @@ def get_network_metrics(model, X_train, y_train, X_test, y_test, batch_size=32):
     print('----------')
     print(f'Training Loss: {results_train[0]:.3} \nTraining Accuracy: {results_train[1]:.3}')
     train_f1 = f1_score(rounded_train_labels, rounded_train_predictions, average='weighted')
-    print(f'Train F1 Score: {train_f1}')
+    print(f'Train Average Weighted F1 Score: {train_f1:.3}')
     train_cm = confusion_matrix(rounded_train_labels, rounded_train_predictions)
     length_train = len(rounded_train_labels)
     for i in range(train_cm.shape[0]):
@@ -212,14 +212,18 @@ def get_network_metrics(model, X_train, y_train, X_test, y_test, batch_size=32):
             length_train = count
             index_value = i
     recall_rare_train = train_cm[index_value, index_value]/np.sum(train_cm[0])
-    print(f'Train Recall on Rarest Category: {recall_rare_train}')
+    print(f'Train Recall on Rarest Category: {recall_rare_train:.3}')
+    precision_rare_train = train_cm[index_value, index_value]/np.sum(train_cm[:,0])
+    print(f'Train Precision on Rarest Category: {precision_rare_train:.3}')
+    f1_rare_train = 2*(recall_rare_train*precision_rare_train)/(recall_rare_train+precision_rare_train)
+    print(f'Train F1 on Rarest Category: {f1_rare_train:.3}')
 
     # Evaluating Testing
     results_test = model.evaluate(X_test, y_test)
     print('----------')
     print(f'Test Loss: {results_test[0]:.3} \nTest Accuracy: {results_test[1]:.3}')
     test_f1 = f1_score(rounded_test_labels, rounded_test_predictions, average='weighted')
-    print(f'Test F1 Score: {test_f1}')
+    print(f'Test Average Weighted F1 Score: {test_f1:.3}')
     test_cm = confusion_matrix(rounded_test_labels, rounded_test_predictions)
     length_test = len(rounded_test_labels)
     for i in range(test_cm.shape[0]):
@@ -228,12 +232,20 @@ def get_network_metrics(model, X_train, y_train, X_test, y_test, batch_size=32):
             length_test = count
             index_value = i
     recall_rare_test = test_cm[index_value, index_value]/np.sum(test_cm[0])
-    print(f'Test Recall on Rarest Category: {recall_rare_test}')
+    print(f'Test Recall on Rarest Category: {recall_rare_test:.3}')
+    precision_rare_test = test_cm[index_value, index_value]/np.sum(test_cm[:,0])
+    print(f'Test Precision on Rarest Category: {precision_rare_test:.3}')
+    f1_rare_test = 2*(recall_rare_test*precision_rare_test)/(recall_rare_test+precision_rare_test)
+    print(f'Test F1 on Rarest Category: {f1_rare_test:.3}')
 
     return {"Training Accuracy": results_train[1],
             "Test Accuracy": results_test[1],
             "Training F1": train_f1,
             "Test F1": test_f1,
             "Training Rare Recall": recall_rare_train,
-            "Test Rare Recall": recall_rare_test
+            "Test Rare Recall": recall_rare_test,
+            "Training Rare Precision": precision_rare_train,
+            "Test Rare Precision": precision_rare_test,
+            "Training Rare F1": f1_rare_train,
+            "Test Rare F1": f1_rare_test
             }
