@@ -1,13 +1,12 @@
-from audioop import reverse
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import scipy.stats as stats
-import time
 from sklearn.inspection import permutation_importance
 from sklearn.metrics import  confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 from matplotlib.axes._axes import _log as matplotlib_axes_logger
+from matplotlib.ticker import MaxNLocator
 import matplotlib.ticker as mticker
 import seaborn as sns
 # large = 28
@@ -242,4 +241,20 @@ def training_graph(val_dict, title):
     ax.legend()
     return plt.show()
 
-    
+def visualize_top_10(freq_dist, title, ylabel="Count"):
+
+    # Extract data for plotting
+    top_10 = list(zip(*freq_dist.most_common(10)))
+    tokens = top_10[0]
+    counts = top_10[1]
+
+    # Set up plot and plot data
+    fig, ax = plt.subplots(figsize=(12,8))
+    ax.bar(tokens, counts)
+
+    # Customize plot appearance
+    ax.set_title(title)
+    ax.set_ylabel(ylabel)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.tick_params(axis="x", rotation=90)
+    plt.show()
