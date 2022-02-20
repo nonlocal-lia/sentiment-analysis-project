@@ -86,9 +86,10 @@ A basic support vector classifier model has an accuracy of about 85% on the trai
 
 A neural nework with an embedding layer of 128, a LSTM layer with 25 nodes, and an additional dense layer of 50, with 50% drop out between layers trained for 5 epochs has an accuracy of about 87% on the training and 67% test data. I has an F1 score of about 87% on the training and 65% on the test data..
 
-Model: "sequential"
-_________________________________________________________________
- Layer (type)                Output Shape              Param #   
+##### Model Summary
+
+ Layer (type)                Output Shape              Params   
+
 =================================================================
  embedding (Embedding)       (None, None, 128)         2560000   
                                                                  
@@ -109,7 +110,7 @@ _________________________________________________________________
 Total params: 2,598,503
 Trainable params: 2,598,503
 Non-trainable params: 0
-_________________________________________________________________
+
 
 ![baseline_matrix](/images/baseline_test_matrix.png)
 
