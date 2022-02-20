@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import statsmodels.api as sm
-import scipy.stats as stats
 from sklearn.inspection import permutation_importance
 from sklearn.metrics import  confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
@@ -144,29 +142,6 @@ def linearity_graph(model, X_test, y_test, size=(15,8), save_name=None):
     ax.set_xlabel("Actual Value")
     ax.set_ylabel("Predicted Value")
     ax.legend()
-    if save_name:
-        plt.savefig(f'images/{save_name}.png')
-    return plt.show()
-
-
-def normality_graph(model, X_test, y_test, size=(15,8), save_name=None):
-    """
-    Produces a Q-Q plot from a panda dataframe and saves it if save_name input
-
-    Arg:
-        model: a Scikit learn OLS model constructed for the variables input
-        X_test(pdDataFrame): a dataframe wih the independent variables to test the model on
-        y_test(pdDataFrame): a dataframe wih the dependent variable to test the model on
-        size(tuple): a 2 element tuple with the size of the produced figure
-
-    Return:
-        Displays the normality plot
-        Stores graph in image folder if save_name is input
-    """
-    fig, ax = plt.subplots(figsize=size)
-    preds = model.predict(X_test)
-    residuals = (y_test - preds)
-    sm.graphics.qqplot(residuals, dist=stats.norm, line='45', fit=True, ax=ax)
     if save_name:
         plt.savefig(f'images/{save_name}.png')
     return plt.show()
