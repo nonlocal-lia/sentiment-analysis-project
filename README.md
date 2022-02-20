@@ -103,11 +103,11 @@ Here are graphs of the performance of all the models according to accuracy, weig
 
 ![weighted_F1_graph](/images/f1_models.png)
 
-![rare_F1_graph](/images/rare_f1_models.png)
+![rare_F1_graph](/images/rare_f1_model.png)
 
 There is no clear winner by all metrics, but the initial GloVe model perfroms best on accuracy and weighted f1, with only mild trade off on the negative category, and thus was saved as the final model
 
-![glove_matrix](/images/glove_test_matrix.png)
+![glove_matrix](/images/glove_matrix.png)
 
 #### *Model Interpretation*
 
