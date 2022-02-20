@@ -3,13 +3,44 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score, confusion_matrix, ConfusionMatrixDisplay
 
 def get_scores(model, X_test, y_test):
+
+    """
+    Gets accuracy, and weighted precision, recall and F1 scores of a Sklearn classification model using sklearn metrics
+
+    Arg:
+        model: a sklearn classification model
+        X_test: a Pandas dataframe containing the data to evaluate the model on
+        y_test: a numpy array containing the known target values for the test data
+
+    Return:
+        output: a dictionary with the model's scores on the 4 metrics
+    """
+
     acc = accuracy_score(y_test, model.predict(X_test))
     prec = precision_score(y_test, model.predict(X_test), average='weighted')
     f1 = f1_score(y_test, model.predict(X_test), average='weighted')
     rec = recall_score(y_test, model.predict(X_test), average='weighted')
-    return {'Accuracy': acc, "Precision": prec, "Recall": rec, "F1 Score": f1}
+    output = {'Accuracy': acc, "Precision": prec, "Recall": rec, "F1 Score": f1}
+    return output
 
 def get_network_metrics(model, X_train, y_train, X_test, y_test, batch_size=32):
+
+    """
+    Gets accuracy, and weighted F1 scores of a Keras classification model for both training and test data
+    Also determines the rarest category in the data and calculates the model's precision, recall, and F1
+    on the rare category
+
+    Arg:
+        model: a sklearn classification model
+        X_train: a Pandas dataframe containing the data used to train the model
+        y_train: a numpy array containing the known target values the model was trained using
+        X_test: a Pandas dataframe containing the data to evaluate the model on
+        y_test: a numpy array containing the known target values for the test data
+
+    Return:
+        Prints scores
+        output: a dictionary with the model's scores
+    """
     
     # Transforming predictions into form for evaluation with Sklearn functions
     train_predictions = model.predict(X_train, batch_size=batch_size, verbose=0)
@@ -59,7 +90,7 @@ def get_network_metrics(model, X_train, y_train, X_test, y_test, batch_size=32):
     f1_rare_test = 2*(recall_rare_test*precision_rare_test)/(recall_rare_test+precision_rare_test)
     print(f'Test F1 on Rarest Category: {f1_rare_test:.3}')
 
-    return {"Training Accuracy": results_train[1],
+    output = {"Training Accuracy": results_train[1],
             "Test Accuracy": results_test[1],
             "Training F1": train_f1,
             "Test F1": test_f1,
@@ -70,3 +101,4 @@ def get_network_metrics(model, X_train, y_train, X_test, y_test, batch_size=32):
             "Training Rare F1": f1_rare_train,
             "Test Rare F1": f1_rare_test
             }
+    return output

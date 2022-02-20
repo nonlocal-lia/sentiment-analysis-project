@@ -24,6 +24,22 @@ plt.style.use('seaborn-darkgrid')
 
 
 def plot_feature_importances(model, X_train, model_title = 'This', n_features = 10, sort_features = True, size=(15,8), save_name=None):
+    """
+    Plots feature importances of a sklearn model save the plot if save_name is input
+
+    Arg:
+        model: a sklearn model
+        X_train: a pd DataFrame containing the training data
+        model_title: a string which will be used in the graph title as the name of the model
+        n_features: an int number of features to include in the plot
+        sort_features: a boolean determining whether to sort the features prior to graphing
+        size: a tuple determining the size of the plot
+        save_name: a str containing the file name and path to save the plot
+
+    Return:
+        Displays feature importance graph
+        Stores graph in image folder if save_name is input
+    """
     importances = model.feature_importances_
     labels = []
     for col in list(X_train.columns):
@@ -42,6 +58,22 @@ def plot_feature_importances(model, X_train, model_title = 'This', n_features = 
     return plt.show()
 
 def plot_permutation_importance(model, X_test, y_test, model_title = 'This', n_features = 10, sort_features = True, size=(15,8), save_name=None):
+    """
+    Plots permuation importances of a sklearn model save the plot if save_name is input
+
+    Arg:
+        model: a sklearn model
+        X_train: a pd DataFrame containing the training data
+        model_title: a string which will be used in the graph title as the name of the model
+        n_features: an int number of features to include in the plot
+        sort_features: a boolean determining whether to sort the features prior to graphing
+        size: a tuple determining the size of the plot
+        save_name: a str containing the file name and path to save the plot
+
+    Return:
+        Displays feature importance graph
+        Stores graph in image folder if save_name is input
+    """
     result = permutation_importance(model, X_test, y_test)
     labels = []
     for col in list(X_test.columns):
@@ -202,8 +234,25 @@ def one_hot_coef_graph(coef_df, categories, dropped_var, target_name='Price', in
     return plt.show()
 
 def make_network_confusion_matrices(model, X_train, y_train, X_test, y_test, labels, title, batch_size=32):
+    """
+    Plots confusion matrixes for a Keras classification mode
 
-    # Converting 
+    Arg:
+        model: a Keras classification model
+        X_train: a Pandas dataframe containing the data used to train the model
+        y_train: a numpy array containing the known target values the model was trained using
+        X_test: a Pandas dataframe containing the data to evaluate the model on
+        y_test: a numpy array containing the known target values for the test data
+        labels: an array containing the original category names of the target values
+        title: a string naming the model to be used in the plot titles
+        batch_size: the batch size used in training the model
+        save_name: a str containing the file name and path to save the plot
+
+    Return:
+        Displays a pair of confusion matrices, one for the training and the other for the test data
+    """
+
+    # Converting predictions into form for confusion matrices
     train_predictions = model.predict(X_train, batch_size=batch_size, verbose=0)
     rounded_train_predictions = np.argmax(train_predictions, axis=1)
     rounded_train_labels=np.argmax(y_train, axis=1)
@@ -211,6 +260,7 @@ def make_network_confusion_matrices(model, X_train, y_train, X_test, y_test, lab
     rounded_test_predictions = np.argmax(test_predictions, axis=1)
     rounded_test_labels=np.argmax(y_test, axis=1)
 
+    #plotting training matrix
     train_cm = confusion_matrix(rounded_train_labels, rounded_train_predictions)
     disp = ConfusionMatrixDisplay(train_cm, display_labels=labels)
     disp.plot(cmap="Greens")
@@ -218,6 +268,7 @@ def make_network_confusion_matrices(model, X_train, y_train, X_test, y_test, lab
     plt.title('Training Matrix: {}'.format(title))
     plt.show()
 
+    #plotting test matrix
     test_cm = confusion_matrix(rounded_test_labels, rounded_test_predictions)
     disp = ConfusionMatrixDisplay(test_cm, display_labels=labels)
     disp.plot(cmap="Greens")
@@ -226,6 +277,16 @@ def make_network_confusion_matrices(model, X_train, y_train, X_test, y_test, lab
     plt.show()
 
 def training_graph(val_dict, title):
+    """
+    Plots a graph of the training and validation losses during the training process or a Keras model.
+
+    Arg:
+        val_dict: the validation dictionary produced by the Keras model during training
+        title: a string naming the model to be used in the plot titles
+
+    Return:
+        Displays a graph of the training and validation losses vs the epochs of training
+    """
     fig, ax = plt.subplots(figsize=(12, 8))
 
     loss_values = val_dict['loss']
@@ -242,6 +303,16 @@ def training_graph(val_dict, title):
     return plt.show()
 
 def visualize_top_10(freq_dist, title, ylabel="Count"):
+    """
+    Plots a bar graph of the top 10 values in frequency dictionary.
+
+    Arg:
+        freq_dict: a dictionary containing keys and values that corespond to frequencies of the keys
+        title: a string to use in the plot title
+
+    Return:
+        A bar graph of the top 10 values in the frequency dictionary
+    """
 
     # Extract data for plotting
     top_10 = list(zip(*freq_dist.most_common(10)))
