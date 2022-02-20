@@ -60,30 +60,62 @@ With the relative smallness of the data it is potentially possible for fairly si
 
 #### *Bayesian Model*
 
+A naive bayesian classifier run on a TF-IDF vectorizered version of the tweets with 1000 features has an accuracy of about 72% on the training and 66% on the test data, which is not amazing given how imbalanced the data is, and a weighted F1 score of 61% on test data.
+
 ![bayesian_matrix](/images/bayes_test_matrix.png)
 
 #### *Logistic Model*
+
+A basic logisic regression model has an accuracy of about 74% on the training data and 65% on the test data. I has an F1 score of about 62% on the test data.
 
 ![logistic_matrix](/images/logistic_test_matrix.png)
 
 #### *Random Forest Model*
 
+A baseline random forest classifier has an accuracy of about 98% on the training and 67% on the test data and an F1 score of 64% on test data.
+
 ![forest_matrix](/images/forest_test_matrix.png)
 
 #### *SVC Model*
 
+A basic support vector classifier model has an accuracy of about 85% on the training data and 68% on the test data. I has an F1 score of about 65% on the test data.
+
 ![SVC_matrix](/images/SVC_test_matrix.png)
 
 #### *Baseline RNN*
-A baseline neural network with an embedding layer, a LSTM layer, and a Dense layer with a dropout of 0.5 between layers was constructed using Keras to see if it would perform better on the data. See summary below for information on its construction:
 
-summary
+A neural nework with an embedding layer of 128, a LSTM layer with 25 nodes, and an additional dense layer of 50, with 50% drop out between layers trained for 5 epochs has an accuracy of about 87% on the training and 67% test data. I has an F1 score of about 87% on the training and 65% on the test data..
 
-It did marginally better at about 65% accuracy, but perfomrmed very poorly on the rare negative category with a recall of only about 12% for that category, and despite the dropout between layers, began to signficantly overfit on traing data after only 3 epochs of training.
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding (Embedding)       (None, None, 128)         2560000   
+                                                                 
+ lstm (LSTM)                 (None, None, 50)          35800     
+                                                                 
+ global_max_pooling1d (Globa  (None, 50)               0         
+ lMaxPooling1D)                                                  
+                                                                 
+ dropout (Dropout)           (None, 50)                0         
+                                                                 
+ dense (Dense)               (None, 50)                2550      
+                                                                 
+ dropout_1 (Dropout)         (None, 50)                0         
+                                                                 
+ dense_1 (Dense)             (None, 3)                 153       
+                                                                 
+=================================================================
+Total params: 2,598,503
+Trainable params: 2,598,503
+Non-trainable params: 0
+_________________________________________________________________
 
 ![baseline_matrix](/images/baseline_test_matrix.png)
 
 To help resolve the class imbalance issue a weighted version of the model was run using weights gotten from the sklearn class weights utility. There was a marginal tradeoff in overall accuracy and F1 score for the weighted model over the non-weighed, but the weights significantly improved recall on the negative category.
+
+Weights: {0: 5.399406087602078, 1: 0.5445492662473794, 2: 1.0220629567172568}
 
 ![weighted_matrix](/images/weighted_test_matrix.png)
 
@@ -105,13 +137,21 @@ Here are graphs of the performance of all the models according to accuracy, weig
 
 ![rare_F1_graph](/images/rare_f1_model.png)
 
-There is no clear winner by all metrics, but the initial GloVe model perfroms best on accuracy and weighted f1, with only mild trade off on the negative category, and thus was saved as the final model
+There is no clear winner by all metrics, but the initial GloVe model perfroms best on accuracy and weighted F1 score, with only mild trade off on the negative category, and thus was saved as the final model
 
 ![glove_matrix](/images/glove_matrix.png)
 
 #### *Model Interpretation*
 
--
+To understand the features the models were detecting, Lime was used. As we can see from these example cases, the non-neural nets are picking up on very different features than the final RNN model and would probably have significant limits in generalizing.
+
+#### *Random Forest Example*
+
+![lime_forest](/images/lime_forest.png)
+
+#### *Final RNN Example*
+
+![lime_rnn](/images/lime_rnn.png)
 
 ### Limitations
 
@@ -123,7 +163,7 @@ Doing large scale sentiment analysis on tweets is feasible, but only with suffic
 
 ## For More Information
 
-Please review my full analysis in our Jupyter Notebook or our presentation.
+Please review my full analysis in our Jupyter Notebooks or our presentation.
 
 For any additional questions, please contact **Lia Elwonger lelwonger@gmail.com**
 
@@ -133,9 +173,10 @@ For any additional questions, please contact **Lia Elwonger lelwonger@gmail.com*
 ├── README.md                           <- The top-level README for reviewers of this project
 ├── EDA_notebook.ipynb                  <- Notebook just containing the exploration and cleaning of the data
 ├── modeling_notebook.ipynb             <- Notebook containing just the modeling of the precleaned data
-├── technical_notebook.ipynb            <- Narrative documentation of entire model construction process in Jupyter notebook
+├── main_notebook.ipynb                 <- Narrative documentation of entire model construction process in Jupyter notebook
 ├── presentation.pdf                    <- PDF version of project presentation
 ├── data                                <- Both sourced externally and generated from code, includes cleaned data
 ├── code                                <- Functions for cleaning and processing the data and constructing visualizations
+├── models                              <- Contains saved version of final model
 └── images                              <- Both sourced externally and generated from code
 ```
