@@ -91,6 +91,7 @@ A neural nework with an embedding layer of 128, a LSTM layer with 25 nodes, and 
  Layer (type)                Output Shape              Params   
 
 =================================================================
+
  embedding (Embedding)       (None, None, 128)         2560000   
                                                                  
  lstm (LSTM)                 (None, None, 50)          35800     
