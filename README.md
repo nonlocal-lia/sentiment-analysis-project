@@ -21,38 +21,75 @@ This project primarily uses data gathered from CrowdFlower who used crowdsourcin
 
 The relative smallness of the dataset from a NLP perspective will limit the overall achievable accuracy at this task, which is already a complex one. There is also significant class imbalance in the data with most of the data being marked as no emotion and less than 10% of the data expressing negative views towards the brand or product.
 
-### Modeling
-
 #### Preperation and Exploration
 Rows that were marked "Could not tell" were changed to "No emotion" to simplify the analysis. 
 
 Links, punctuation and stopwords were removed from the data prior to modeling. '#' was removed from twitter hashtags, but the content of the tag was kept. The data was small enough that lemmatization was usable to reduce the dimensionality of the data.
 
-As an initial exploration of the data, word frequency of the tweets in each category was graphed, as well as bigram frequency and mutual information scores to see how distinct the words in the tweets were.
+To get a general idea of the data visualizations for both the single word and bigram frequencies were made:
 
-Graphs:
+##### *Single Word Frequency*
 
-#### Method of Modeling
+![positive_word_cloud](/images/pos_frequency_cloud.png)
+
+![negative_word_cloud](/images/neg_frequency_cloud.png)
+
+![neutral_word_cloud](/images/neutral_frequency_cloud.png)
+
+##### *Bigram Frequency*
+
+![positive_bigram_word_cloud](/images/pos_bigram_frequency_cloud.png)
+
+![negative__bigram_word_cloud](/images/neg_bigram_frequency_cloud.png)
+
+![neutral_bigram_word_cloud](/images/neutral_bigram_frequency_cloud.png)
+
+As we can see the differences in the data are very subtle.
+
+##### *Mutual Information Score*
+
+Difference in the mutual information scores of the bigrams in the different categories can also give a feel for how different the categories are:
+
+![mutual_information_graph](/images/mutual_information.png)
+
+
+### Modeling
 The sentiment column was used as the target and the column marking which particular product was discussed was ignored since there is likely insufficient data to make good predictions for this columnd and using this in prediction of the sentiment would be infeasible in a real world application of the model. If you are going to have humans identify what product is discussed you might as well pay them to tell you the sentiment about it too, so this column could only reasonably be a target column.
 
-With the relative smallness of the data it is potentially possible for a SVC or Random Forest to do about as well as a neural network on this dataset, so sklearn versions of these models were run on a TF-IDF vectorized version of the cleaned data. These models acheived quite poor accuracy of around 60% which is not significant given the extreme inbalance in the data.
+With the relative smallness of the data it is potentially possible for fairly simple models to do about as well as a neural network on this dataset, so sklearn versions of these models were run on a TF-IDF vectorized version of the cleaned data with 1000 feature vectors.
 
-confusion matrix
+#### *Bayesian Model*
 
+![bayesian_matrix](/images/bayes_test_matrix.png)
+
+#### *Logistic Model*
+
+![logistic_matrix](/images/logistic_test_matrix.png)
+
+#### *Random Forest Model*
+
+![forest_matrix](/images/forest_test_matrix.png)
+
+#### *SVC Model*
+
+![SVC_matrix](/images/SVC_test_matrix.png)
+
+#### *Baseline RNN*
 A baseline neural network with an embedding layer, a LSTM layer, and a Dense layer with a dropout of 0.5 between layers was constructed using Keras to see if it would perform better on the data. See summary below for information on its construction:
 
 summary
 
 It did marginally better at about 65% accuracy, but perfomrmed very poorly on the rare negative category with a recall of only about 12% for that category, and despite the dropout between layers, began to signficantly overfit on traing data after only 3 epochs of training.
 
-confusion matrix
+![baseline_matrix](/images/baseline_test_matrix.png)
 
 To help resolve the class imbalance issue a weighted version of the model was run using weights gotten from the sklearn class weights utility. There was a marginal tradeoff in overall accuracy and F1 score for the weighted model over the non-weighed, but the weights significantly improved recall on the negative category.
 
-confusion matrix
+![weighted_matrix](/images/weighted_test_matrix.png)
 
 Additional improvements to the model were attempted including:
 
+* Augmenting the data using replacement with synonyms
 * Using a pretrained GloVe embedding rather than an untrained embedding layer.
 * Increasing the size of the embedding
 * Altering the number of nodes
@@ -60,13 +97,21 @@ Additional improvements to the model were attempted including:
 
 ### Results
 
-Here is a graph of the performance of all the models by weighted F1 Score and recall on the rare negative sentiment category:
+Here are graphs of the performance of all the models according to accuracy, weighted F1 Score, and the F1 Score narrowly on the rare negative sentiment category:
 
-graphs
+![accuracy_graph](/images/accuracy_models.png)
 
-There is no clear winner by both metrics, but _ provides a decent balance of good recall on the negative sentiment tweets but without huge losses in overall performance according the the F1 Score.
+![weighted_F1_graph](/images/f1_models.png)
 
-confusion matrix
+![rare_F1_graph](/images/rare_f1_models.png)
+
+There is no clear winner by all metrics, but the initial GloVe model perfroms best on accuracy and weighted f1, with only mild trade off on the negative category, and thus was saved as the final model
+
+![glove_matrix](/images/glove_test_matrix.png)
+
+#### *Model Interpretation*
+
+-
 
 ### Limitations
 
