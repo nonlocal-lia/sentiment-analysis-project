@@ -108,6 +108,7 @@ A neural nework with an embedding layer of 128, a LSTM layer with 25 nodes, and 
  dense_1 (Dense)             (None, 3)                 153       
                                                                  
 =================================================================
+
 Total params: 2,598,503
 Trainable params: 2,598,503
 Non-trainable params: 0
