@@ -88,6 +88,7 @@ A neural nework with an embedding layer of 128, a LSTM layer with 25 nodes, and 
 
 ##### Model Summary
 
+```
  Layer (type)                Output Shape              Params   
 
 =================================================================
@@ -112,6 +113,7 @@ A neural nework with an embedding layer of 128, a LSTM layer with 25 nodes, and 
 Total params: 2,598,503
 Trainable params: 2,598,503
 Non-trainable params: 0
+```
 
 
 ![baseline_matrix](/images/baseline_test_matrix.png)
