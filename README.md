@@ -19,7 +19,7 @@ Advances in NLP can help with tis problem by allowing machines to do sorting of 
 
 This project primarily uses data gathered from CrowdFlower who used crowdsourcing to identify the sentiment features of a set of tweets which can be found on found on [data.world](https://data.world/crowdflower/brands-and-product-emotions) or in the data folder in this project's GitHub repository. The data contains 9203 datapoints containing columns containing the full tweet, a column identifying what brand or product the tweet was about if any, and a final column indicating whether it has any emotion positive or negative or none towards the brand or product. The products found by keywrods seraching were all either Apple or Google products. The data was gathered in 2013 and all the tweets came from the #SXSW tag.
 
-The relative smallness of the dataset from a NLP perspective will limit the overall achievable accuracy at this task, which is already a complex one. There is also significant class imbalance in the data with most of the data being marked as no emotion and less than 10% of the data expressing negative views towards the brand or product.
+The relative smallness of the dataset from a NLP perspective will limit the overall achievable accuracy at this task, which is already a complex one. There is also significant class imbalance in the data with most of the data (61%) being marked as no emotion and only 6% of the data expressing negative views towards the brand or product.
 
 #### Preperation and Exploration
 Rows that were marked "Could not tell" were changed to "No emotion" to simplify the analysis. 
@@ -44,7 +44,7 @@ To get a general idea of the data visualizations for both the single word and bi
 
 ![neutral_bigram_word_cloud](/images/neutral_bigram_frequency_cloud.png)
 
-As we can see the differences in the data are very subtle.
+As we can see the differences in the data are very subtle and might be difficult for traditional models to pick up on.
 
 ##### *Mutual Information Score*
 
@@ -54,7 +54,7 @@ Difference in the mutual information scores of the bigrams in the different cate
 
 
 ### Modeling
-The sentiment column was used as the target and the column marking which particular product was discussed was ignored since there is likely insufficient data to make good predictions for this columnd and using this in prediction of the sentiment would be infeasible in a real world application of the model. If you are going to have humans identify what product is discussed you might as well pay them to tell you the sentiment about it too, so this column could only reasonably be a target column.
+The sentiment column was used as the target and the column marking which particular product was discussed was ignored since there is likely insufficient data to make good predictions for this column and using this in prediction of the sentiment would be infeasible in a real world application of the model. If you are going to have humans identify what product is discussed you might as well pay them to tell you the sentiment about it too, so this column could only reasonably be a target column.
 
 With the relative smallness of the data it is potentially possible for fairly simple models to do about as well as a neural network on this dataset, so sklearn versions of these models were run on a TF-IDF vectorized version of the cleaned data with 1000 feature vectors.
 
@@ -148,7 +148,7 @@ There is no clear winner by all metrics, but the initial GloVe model perfroms be
 
 #### *Model Interpretation*
 
-To understand the features the models were detecting, Lime was used. As we can see from these example cases, the non-neural nets are picking up on very different features than the final RNN model and would probably have significant limits in generalizing.
+To understand the features the models were detecting, Lime was used. As we can see from these example cases, the non-neural nets are picking up on very different features than the final RNN model and would probably have significant limits in generalizing to other data.
 
 #### *Random Forest Example*
 
@@ -160,11 +160,11 @@ To understand the features the models were detecting, Lime was used. As we can s
 
 ### Limitations
 
-Unfortunatly much of the benefits of neural networks comes with much larger dataset than were had here, and thiswas also a significantly difficult task for such a model given that unlike in review data there is no guarentee that approving or disapproving language is actually directed at the brnd or product, so the model needs to determine both that such sentiment exists and that it is directedto one of the possible brands or products that are inthe data, *and not others* which makes this task much more difficult.
+Unfortunatly much of the benefits of neural networks comes with much larger dataset than were had here, and this was also a significantly difficult task for such a model given that unlike in review data there is no guarentee that approving or disapproving language is actually directed at the brnd or product, so the model needs to determine both that such sentiment exists and that it is directed to one of the possible brands or products that are in the data, *and not others* which makes this task much more difficult.
 
 ### Conclusions
 
-Doing large scale sentiment analysis on tweets is feasible, but only with sufficiently large and clear datasets. But, even with as littel data as is had here, a basic neural network can provide a useful filter for finding tweets or online mention that can be useful for market analysis.
+Doing large scale sentiment analysis on tweets is feasible, but only with sufficiently large and clear datasets. But, even with as little data as is had here, a basic neural network can provide a useful filter for finding tweets or online mention that can be useful for market analysis.
 
 ## For More Information
 
